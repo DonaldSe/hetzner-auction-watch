@@ -1,0 +1,45 @@
+name: 📚 Docs fix (typo / lien cassé / clarté)
+description: Petite correction de doc — pas une demande de doc complète
+title: "docs: "
+labels: [docs, good-first-issue]
+body:
+  - type: input
+    id: file
+    attributes:
+      label: Fichier concerné
+      placeholder: "docs/obsidian/Workflows/Setup initial.md"
+    validations: { required: true }
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Typo
+        - Lien cassé
+        - Info obsolète
+        - Clarté / reformulation
+        - Exemple manquant
+        - Section absente
+    validations: { required: true }
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Texte actuel (extrait)
+      render: markdown
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Suggestion
+      render: markdown
+    validations: { required: true }
+
+  - type: checkboxes
+    id: scope_check
+    attributes:
+      label: ⚠ Vérifications
+      options:
+        - label: Cette doc n'est pas auto-générée (ex Terraform docs, OpenAPI). Si oui, fix la source à la place.
+        - label: J'ai grep le repo pour voir s'il y a d'autres occurrences à corriger en même temps.

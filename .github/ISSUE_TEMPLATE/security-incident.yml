@@ -1,0 +1,78 @@
+name: 🔒 Security incident or vulnerability
+description: NE PAS UTILISER pour les vulns sensibles. Voir contact security ci-dessous.
+title: "security: "
+labels: [security, triage, confidential]
+assignees:
+  - DonaldSe
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠ Avant de soumettre
+
+        Si la vulnérabilité est **exploitable activement** OU concerne des
+        données sensibles, **N'OUVRE PAS d'issue publique**. Contacte
+        directement via :
+
+        - **GitHub Security Advisory** (privé) :
+          → repo → Security tab → Advisories → New draft security advisory
+        - **Email** : security@donaldse.dev (si configuré)
+
+        Cette template est pour **discussions security non-confidentielles** :
+        suggestions hardening, questions sur les ADRs sécurité, etc.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Sévérité estimée
+      options:
+        - 🔴 Critical (exploit actif, données exposées)
+        - 🟠 High (vuln connue, exploit possible)
+        - 🟡 Medium (hardening ou config faible)
+        - 🟢 Low (suggestion d'amélioration)
+    validations: { required: true }
+
+  - type: dropdown
+    id: cvss_known
+    attributes:
+      label: CVE/CVSS connu ?
+      options:
+        - "Oui — joins le CVE"
+        - "Non — vulnérabilité interne"
+        - "N/A — pas une vuln, juste suggestion"
+
+  - type: textarea
+    id: cve
+    attributes:
+      label: CVE ID (si applicable)
+      placeholder: "CVE-2026-XXXXX"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Décris ce qui te semble vulnérable / à renforcer.
+    validations: { required: true }
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Composants affectés
+      placeholder: |
+        - rôle linux-baseline-common
+        - module proxmox-vm
+        - cloud-init overlay profil X
+    validations: { required: true }
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Mitigation proposée
+
+  - type: checkboxes
+    id: confidentiality
+    attributes:
+      label: Acknowledgement
+      options:
+        - label: J'ai vérifié que cette issue n'expose **pas** d'info sensible (token, IP, password, exploit code).
+          required: true

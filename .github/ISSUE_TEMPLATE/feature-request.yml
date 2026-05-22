@@ -1,0 +1,61 @@
+name: Feature request
+description: Proposer une nouvelle feature ou amélioration
+title: "feat: "
+labels: [enhancement, triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problème à résoudre
+      description: Quel besoin / pain point ? (pas la solution, le problème)
+      placeholder: |
+        Quand je [...] je dois [...]
+        Ce qui me bloque c'est [...]
+    validations: { required: true }
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+      description: Comment tu vois la solution ?
+    validations: { required: true }
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considérées
+      description: Quelles autres approches as-tu envisagées ?
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - infra-multios (platform)
+        - infra-clients (profils)
+        - linux-iso (builder ISO)
+        - win11-iso (builder ISO)
+        - kali-iso (builder ISO)
+        - bootstrap (provider Hetzner/OVH/...)
+        - docs Obsidian
+        - CI / GitOps
+        - cost-monitor / auction-watch
+        - autre
+    validations: { required: true }
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorité ressentie
+      options:
+        - nice-to-have
+        - utile
+        - important
+        - bloquant
+    validations: { required: true }
+
+  - type: textarea
+    id: refs
+    attributes:
+      label: Refs (ADR, issue, doc)
+      description: Si lié à un ADR ou à une doc Obsidian, mets le lien.

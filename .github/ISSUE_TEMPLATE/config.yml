@@ -1,0 +1,20 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 🔒 Vulnérabilité confidentielle
+    url: https://github.com/DonaldSe/hetzner-auction-watch/security/advisories/new
+    about: |
+      NE PAS ouvrir d'issue publique pour les vulns exploitables.
+      Utilise Security Advisory (privé) avec embargo.
+
+  - name: 💬 Discussion générale
+    url: https://github.com/DonaldSe/hetzner-auction-watch/discussions
+    about: |
+      Pour les questions ouvertes, idées d'architecture, retours d'expérience
+      qui ne nécessitent pas une issue trackée.
+
+  - name: 📖 Documentation
+    url: https://donaldse.github.io/infra-multios/
+    about: |
+      Avant d'ouvrir une issue, vérifie si la réponse n'est pas dans la doc
+      (50+ notes Obsidian : ADRs, workflows, concepts).
