@@ -1,0 +1,43 @@
+# Filtres pour Hetzner Server Auction watcher.
+# Chaque filtre génère une notif distincte (un même serveur peut matcher plusieurs).
+
+filters:
+  # 1. Sweet spot Ryzen 7 7700 / DDR5 (perf/€ 2026)
+  - name: "ryzen-7700-dd5"
+    ram_min_gb: 64
+    price_max_eur: 45.0
+    cpu_regex: "Ryzen 7 7700"
+    disk_type: "nvme"
+    disk_count_min: 2
+    datacenters: ["FSN", "HEL"]
+    ecc_required: false
+
+  # 2. Intel 13th gen i5/i7 (cores nombreux, DDR4 OK)
+  - name: "intel-raptor-cheap"
+    ram_min_gb: 64
+    price_max_eur: 40.0
+    cpu_regex: "(i5-13|i7-13|i7-14)"
+    disk_type: "nvme"
+    disk_count_min: 2
+    datacenters: ["FSN", "HEL"]
+    ecc_required: false
+
+  # 3. Xeon E-2xxx avec ECC (si tu vises du prod-grade)
+  - name: "xeon-ecc-prod"
+    ram_min_gb: 64
+    price_max_eur: 45.0
+    cpu_regex: "Xeon E-2"
+    disk_type: "nvme"
+    disk_count_min: 2
+    datacenters: ["FSN", "HEL"]
+    ecc_required: true
+
+  # 4. Mode "deal de fou" — toute machine ≥64 GB + NVMe ≤35€
+  - name: "deal-de-fou"
+    ram_min_gb: 64
+    price_max_eur: 35.0
+    cpu_regex: ".*"
+    disk_type: "nvme"
+    disk_count_min: 2
+    datacenters: ["FSN", "HEL", "NBG"]
+    ecc_required: false

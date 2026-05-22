@@ -1,0 +1,26 @@
+services:
+  watch:
+    build: .
+    image: ghcr.io/donaldse/hetzner-auction-watch:latest
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./config.yaml:/home/watch/config.yaml:ro
+      - state:/home/watch/state
+    working_dir: /home/watch
+    command:
+      - --config
+      - /home/watch/config.yaml
+      - --state
+      - /home/watch/state/.state.json
+      - --daemon
+      - --interval
+      - "900"
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "hetzner-watch"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  state: {}
