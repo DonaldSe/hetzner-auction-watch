@@ -1,0 +1,31 @@
+# CODEOWNERS — review automatique selon le chemin modifié.
+# Format : <pattern>  @owner1  @owner2
+
+# Default : tout reviewable par @DonaldSe
+*                              @DonaldSe
+
+# Fichiers ULTRA-SENSIBLES (auth, secrets, CI) — review obligatoire même pour admin
+/.github/workflows/            @DonaldSe
+/.github/rulesets/             @DonaldSe
+/.sops.yaml                    @DonaldSe
+/.gitleaks.toml                @DonaldSe
+secrets.sops.yaml              @DonaldSe
+.env.example                   @DonaldSe
+
+# Code Infrastructure
+/terraform/                    @DonaldSe
+/ansible/                      @DonaldSe
+/bootstrap/                    @DonaldSe
+/packer/                       @DonaldSe
+
+# Profils + cloud-init
+/profiles/                     @DonaldSe
+/profiles/*/cloud-init/        @DonaldSe
+
+# Docs (moins critique mais quand même)
+/docs/                         @DonaldSe
+*.md                           @DonaldSe
+
+# ADRs (décisions structurantes — DOUBLE review futur si équipe grandit)
+/docs/obsidian/ADR/            @DonaldSe
+
