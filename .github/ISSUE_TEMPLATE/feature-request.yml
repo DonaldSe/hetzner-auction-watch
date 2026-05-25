@@ -35,7 +35,7 @@ body:
         - infra-clients (profils)
         - linux-iso (builder ISO)
         - win11-iso (builder ISO)
-        - kali-iso (builder ISO)
+        - kali_iso (builder ISO)
         - bootstrap (provider Hetzner/OVH/...)
         - docs Obsidian
         - CI / GitOps
