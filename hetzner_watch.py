@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import time
+import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -41,6 +42,7 @@ class Filter:
     cpu_regex: re.Pattern[str]
     disk_type: str  # "nvme" | "ssd" | "any"
     disk_count_min: int
+    disk_total_gb_min: int  # 0 = no constraint
     datacenters: list[str]  # ["FSN", "HEL", "NBG"] — substring match
     ecc_required: bool
 
@@ -57,6 +59,7 @@ def load_filters(cfg_path: Path) -> list[Filter]:
                 cpu_regex=re.compile(f.get("cpu_regex", ".*"), re.IGNORECASE),
                 disk_type=f.get("disk_type", "nvme").lower(),
                 disk_count_min=int(f.get("disk_count_min", 2)),
+                disk_total_gb_min=int(f.get("disk_total_gb_min", 0)),
                 datacenters=[s.upper() for s in f.get("datacenters", [])],
                 ecc_required=bool(f.get("ecc_required", False)),
             )
@@ -80,13 +83,33 @@ def match(server: dict[str, Any], f: Filter) -> bool:
         return False
     if not f.cpu_regex.search(str(server.get("cpu", ""))):
         return False
-    disks: list[str] = server.get("hdd_arr") or []
-    if len(disks) < f.disk_count_min:
+    disk_data: dict[str, Any] = server.get("serverDiskData") or {}
+    nvme_count = len(disk_data.get("nvme") or [])
+    sata_count = len(disk_data.get("sata") or [])
+    hdd_count = len(disk_data.get("hdd") or [])
+    total_disks = nvme_count + sata_count + hdd_count
+    if total_disks == 0:
+        total_disks = len(server.get("hdd_arr") or [])
+    if f.disk_type == "nvme":
+        if nvme_count < f.disk_count_min:
+            return False
+    elif f.disk_type == "ssd":
+        if (nvme_count + sata_count) < f.disk_count_min:
+            return False
+    elif total_disks < f.disk_count_min:
         return False
-    if f.disk_type == "nvme" and not all("NVMe" in d for d in disks):
-        return False
-    if f.disk_type == "ssd" and not all(("SSD" in d or "NVMe" in d) for d in disks):
-        return False
+    if f.disk_total_gb_min > 0:
+        nvme_gb = sum(disk_data.get("nvme") or [])
+        sata_gb = sum(disk_data.get("sata") or [])
+        hdd_gb = sum(disk_data.get("hdd") or [])
+        if f.disk_type == "nvme":
+            total_gb = nvme_gb
+        elif f.disk_type == "ssd":
+            total_gb = nvme_gb + sata_gb
+        else:
+            total_gb = nvme_gb + sata_gb + hdd_gb
+        if total_gb < f.disk_total_gb_min:
+            return False
     if f.datacenters:
         dc = str(server.get("datacenter", "")).upper()
         if not any(needle in dc for needle in f.datacenters):
@@ -124,13 +147,14 @@ def format_message(server: dict[str, Any], filter_name: str) -> tuple[str, str]:
     ecc = " ECC" if server.get("is_ecc") else ""
     sid = server_id(server)
 
-    title = f"[{filter_name}] {name} @ {price}EUR/m"
+    search_q = urllib.parse.quote(str(cpu))
+    title = f"[{filter_name}] {cpu} @ {price}EUR/m"
     body = (
         f"{cpu}{ecc} ({bench} bench)\n"
         f"RAM: {ram} GB\n"
         f"Disks: {disks}\n"
-        f"DC: {dc}\n"
-        f"https://www.hetzner.com/sb#id={sid}"
+        f"DC: {dc} | Price: {price}EUR/m | id={sid}\n"
+        f"https://www.hetzner.com/sb#search={search_q}"
     )
     return title, body
 
